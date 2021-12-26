@@ -51,5 +51,43 @@ module.exports = {
                 return res.status(200).send(result)
             })
         })
+    },
+    update(req,res){
+        const {id, brand, device} = req.body
+        mysql.getConnection((error, conn)=>{
+            if(error){
+                return res.status(500).send('Erro ao conectar ao banco de dados.')
+            }
+            conn.query('UPDATE products SET brand = ?, device = ? WHERE id = ?',[brand, device, id], (error, result)=>{
+                if(error){
+                    return res.status(500).send(error)
+                }
+                const response = {
+                    msg: "Produto alterado!",
+                    id_alterado: id,
+                    new_brand: brand,
+                    new_device: device
+                }
+                return res.status(200).send(response)
+            })
+        })
+    },
+    delete(req,res){
+        const id = req.body.id
+        mysql.getConnection((error, conn)=>{
+            if(error){
+                return res.status(500).send('Erro ao conectar ao banco de dados.')
+            }
+            conn.query('DELETE FROM products WHERE id = ?',[id], (error, result)=>{
+                if(error){
+                    return res.status(500).send(error)
+                }
+                const response = {
+                    msg: "Produto deletado com sucesso.",
+                    id_deletado: id
+                }
+                return res.status(200).send(response)
+            })
+        })
     }
 }
