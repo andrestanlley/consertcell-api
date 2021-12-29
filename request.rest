@@ -1,10 +1,9 @@
 POST http://localhost:5500/api/createProduct
 Content-Type: application/json
 Authorization: Bearer Token
-
 {
     "brand":"Apple",
-    "device":"iPhone 13"
+    "device":"iPhone 16"
 }
 
 ###
@@ -24,7 +23,7 @@ Content-Type: application/json
 Authorization: Bearer Token
 
 {
-    "id":1,
+    "id": 1,
     "brand":"Samsung",
     "device": "Galaxy S10"
 }
@@ -43,7 +42,7 @@ Authorization: Bearer Token
 
 POST http://localhost:5500/user/register
 Content-Type: application/json
-Authorization: Bearer token
+Authorization: Bearer Token
 
 {
     "user":"usuario",
