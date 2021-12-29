@@ -1,7 +1,6 @@
 const mysql = require('../database/mysql').pool
 
-module.exports = {
-    create(req,res){
+    exports.create = (req,res)=>{
         const brand = req.body.brand.toUpperCase()
         const device = req.body.device.toUpperCase()
         mysql.getConnection((error, conn)=>{
@@ -22,8 +21,9 @@ module.exports = {
                 return res.status(201).send(response)
             })
         })
-    },
-    search(req,res){
+    }
+
+    exports.search = (req,res)=>{
         let {label, value} = req.params
         mysql.getConnection((error, conn)=>{
             if(error){
@@ -37,8 +37,9 @@ module.exports = {
                 return res.status(200).send(result)
             })
         })    
-    },
-    showAll(req,res){
+    }
+    
+    exports.showAll = (req,res)=>{
         mysql.getConnection((error, conn)=>{
             if(error){
                 return res.status(500).send('Erro ao conectar ao banco de dados.')
@@ -51,8 +52,9 @@ module.exports = {
                 return res.status(200).send(result)
             })
         })
-    },
-    update(req,res){
+    }
+
+    exports.update = (req,res)=>{
         const {id, brand, device} = req.body
         mysql.getConnection((error, conn)=>{
             if(error){
@@ -71,8 +73,9 @@ module.exports = {
                 return res.status(200).send(response)
             })
         })
-    },
-    delete(req,res){
+    }
+
+    exports.delete = (req,res)=>{
         const id = req.body.id
         mysql.getConnection((error, conn)=>{
             if(error){
@@ -90,4 +93,3 @@ module.exports = {
             })
         })
     }
-}

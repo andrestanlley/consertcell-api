@@ -2,8 +2,7 @@ const mysql = require('../database/mysql').pool
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
-module.exports = {
-    async register(req,res){
+    exports.register = async (req,res)=>{
         const {user, password} = req.body
         const hashPass = await bcrypt.hash(password, 10)
         mysql.getConnection((error, conn)=>{
@@ -17,8 +16,9 @@ module.exports = {
                 return res.status(201).send('Usuario criado!')
             })
         })
-    },
-    login(req,res){
+    }
+
+    exports.login = (req,res)=>{
         const {user, password} = req.body
         mysql.getConnection((error, conn)=>{
             if(error){
@@ -29,19 +29,21 @@ module.exports = {
                 if(error){
                     return res.status(500).send(error)
                 }
-                bcrypt.compare(password, result[0].pass, (error, res)=>{
-                    if(error){
+                if(result.length < 1){
+                   return res.status(401).send({msg:'Não autorizado.'})
+                }
+                bcrypt.compare(password, result[0].pass, (error, response)=>{
+                    if(error || !response){
                         return res.status(401).send({msg:'Não autorizado.'})
                     }
+                    const token = jwt.sign({
+                        user: result[0].user,
+                        adm: result[0].adm
+                    }, process.env.JWT_KEY, {
+                        expiresIn: "5h"
+                    })
+                    return res.status(200).send({msg:'Autenticado com sucesso!', token})
                 })
-                const token = jwt.sign({
-                    user: result[0].user,
-                    adm: result[0].adm
-                }, process.env.JWT_KEY, {
-                    expiresIn: "1h"
-                })
-                res.status(200).send({token: token})
             })
         })
         }
-}
