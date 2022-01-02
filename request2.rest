@@ -8,12 +8,12 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiR2lsbmFyY
 
 ###
 
-GET http://localhost:5500/api/searchProduct/id/2
+GET http://localhost:5500/api/searchProduct/id/3
 Content-Type: application/json
 
 ### 
 
-GET http://localhost:5500/api/allProducts
+GET http://64.225.61.64:3000/api/allProducts
 Content-Type: application/json
 
 ###
