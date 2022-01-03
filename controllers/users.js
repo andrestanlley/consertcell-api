@@ -8,8 +8,10 @@ const Users = require('../models/Users')
         const hashPass = await bcrypt.hash(password, 10)
         try {
             const result = await Users.register(user, hashPass)
-            // const result = await mysql.execute('INSERT INTO users (user, pass, adm) VALUES (?,?,0)',[user, hashPass])
-            return res.status(201).send({msg:"Usuario criado!", id: result.insertId, user})
+            return res.status(201).send({
+                message:"Usuario criado!",
+                 id: result.insertId,
+                 user})
         } catch (error) {
             return res.status(500).send(error)
         }
@@ -18,26 +20,25 @@ const Users = require('../models/Users')
     exports.login = async(req,res)=>{
         const {user, password} = req.body
         try {
-            const result = await Users.login(user)
+            const result = await Users.login([user])
             if(result.length < 1){
-                throw { status:401, message:'Não autorizado.'}
-
-                // return res.status(401).send({msg:'Não autorizado.'})
+                throw {status: 401, message: 'Não autorizado.'}
             }
-            bcrypt.compare(password, result[0].pass, (error, response)=>{
-                if(error || !response){
-                    throw { status:401, message:'Não autorizado.'}
-                    // return res.status(401).send({msg:'Não autorizado.'})
-                }
+            const solvePass = await bcrypt.compare(password, result[0].pass)
+            if(solvePass){
                 const token = jwt.sign({
-                    user: result[0].user,
+                    username: result[0].user,
                     adm: result[0].adm
                 }, process.env.JWT_KEY, {
                     expiresIn: "5h"
                 })
-                return res.status(200).send({msg:'Autenticado com sucesso!', token})
-                })
+                return res.status(200).send({
+                    message: 'Autenticado com sucesso!',
+                    token 
+            })
+            }
+            throw {status: 401, message: 'Não autorizado.'}
         } catch (error) {
-            return res.status(error.status || 500).send({msg: error.message})
+            return res.status(error.status).send(error)
         }
     }
