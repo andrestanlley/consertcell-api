@@ -10,6 +10,6 @@ module.exports = (req, res, next)=>{
         req.user = decode
         next()
     } catch (error) {
-        return res.status(500).send(error)
+        return res.status(error.status || 500).send(error)
     }
 }

@@ -13,7 +13,7 @@ const Users = require('../models/Users')
                  id: result.insertId,
                  user})
         } catch (error) {
-            return res.status(500).send(error)
+            return res.status(error.status || 500).send(error)
         }
     }
 
@@ -39,6 +39,6 @@ const Users = require('../models/Users')
             }
             throw {status: 401, message: 'Não autorizado.'}
         } catch (error) {
-            return res.status(error.status).send(error)
+            return res.status(error.status || 500).send(error)
         }
     }
